@@ -1,0 +1,126 @@
+
+<header>Drip Automation</header>
+<main>
+
+  <!-- Left side settings panel -->
+  <aside>
+    <div class="settings">
+      <div *ngIf="editStep">
+        <div *ngIf="selectedStep.type == 'email'">
+          <div>
+            <label>Email Name:</label>
+            <input type="text" [(ngModel)]="selectedStep.settings.emailName">
+          </div>
+          <div>
+            <label>Subject Line:</label>
+            <input type="text" [(ngModel)]="selectedStep.settings.subject">
+          </div>
+          <div>
+            <label>From Name:</label>
+            <input type="text" [(ngModel)]="selectedStep.settings.fromName">
+          </div>
+          <div>
+            <label>From Address:</label>
+            <input type="text" [(ngModel)]="selectedStep.settings.fromAddress">
+          </div>
+        </div>
+        
+        <div *ngIf="selectedStep.type == 'condition'">
+          <div>
+            <label>Condition Name:</label>
+            <input type="text" [(ngModel)]="selectedStep.settings.conditionName">
+          </div>
+        </div>
+        
+        <div *ngIf="selectedStep.type == 'delay'">
+          <div>
+            <label>Delay time:</label>
+            <input type="number" [(ngModel)]="selectedStep.settings.delay">
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- Main workflow section -->
+  <section>
+
+    <div class="step">
+      <mat-card>
+        <mat-icon>reorder</mat-icon>
+        <mat-card-content>Subscriber joins the list for [dripname]</mat-card-content>
+      </mat-card>
+      <div>|</div>
+      <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
+    </div>
+
+    <div class="step" *ngFor="let step of steps">
+      
+      <div *ngIf="step.type == 'delay'">
+        <mat-card (click)="openSettings(step)" class="delayCard">
+          <mat-icon>timer</mat-icon>
+          <mat-card-content>Wait {{ step.settings.delay }} hours</mat-card-content>
+        </mat-card>
+        <div>|</div>
+        <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
+      </div>
+
+      <div *ngIf="step.type == 'email'">
+        <mat-card (click)="openSettings(step)" class="emailCard">
+          <mat-icon>mail_outline</mat-icon>
+          <mat-card-content>{{ step.settings.emailName }}</mat-card-content>
+        </mat-card>
+        <div>|</div>
+        <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
+      </div>
+
+      <div *ngIf="step.type == 'condition'">
+        <mat-card (click)="openSettings(step)" class="conditionCard">
+          <mat-icon>device_hub</mat-icon>
+          <mat-card-content>{{ step.settings.conditionName }}</mat-card-content>
+        </mat-card>
+        <div class="conditionContainer">
+          <div>
+            <p class="yesSquare">Yes</p>
+            <div>|</div>
+            <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
+          </div>
+          <div>
+            <p class="noSquare">No</p>
+            <div>|</div>
+            <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New step HTML -->
+    <div class="newStepModal" *ngIf="createNewStep">
+      <p>Add a step to your journey</p>
+      <div class="stepTypesContainer">
+        <div class="stepType" (click)="addDelayStep()">
+          <mat-icon>timer</mat-icon>
+          <p>Delay</p>
+        </div>
+        <div class="stepType" (click)="addEmailStep()">
+          <mat-icon>mail_outline</mat-icon>
+          <p>Email</p>
+        </div>
+        <div class="stepType" (click)="addConditionStep()">
+          <mat-icon>device_hub</mat-icon>
+          <p>Condition</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+

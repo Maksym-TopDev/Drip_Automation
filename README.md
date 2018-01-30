@@ -1,6 +1,6 @@
-# DripAutomation
+# Drip Automation
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.6.
+This project is a skunkworks project to see if I can get the UI for a basic automated email campaign visual builder working. 
 
 ## Development server
 

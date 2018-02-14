@@ -16,6 +16,10 @@
             <input type="text" [(ngModel)]="selectedStep.settings.subject">
           </div>
           <div>
+            <label>Sequence:</label>
+            <input type="number" [(ngModel)]="selectedStep.settings.sequence">
+          </div>
+          <div>
             <label>From Name:</label>
             <input type="text" [(ngModel)]="selectedStep.settings.fromName">
           </div>
@@ -29,6 +33,32 @@
           <div>
             <label>Condition Name:</label>
             <input type="text" [(ngModel)]="selectedStep.settings.conditionName">
+            <p>IF:</p>
+            <select [(ngModel)]="triggerValue">
+              <option>Specific Link Clicked</option>
+              <option>Email was opened</option>
+              <option>Any Link was clicked</option>
+              <option>Survey is submitted</option>
+              <option>Any link from this group clicked</option>
+              <option>Video Viewed</option>
+            </select>
+            <div *ngIf="triggerValue">
+              <p>THEN:</p>
+              <select>
+                <option>-- Select --</option>
+                <option>Add to Custom List</option>
+                <option>Remove from Custom List</option>
+                <option>Send Auto Responder</option>
+                <option>Change Lead Score</option>
+                <option>Stop Sequence</option>
+                <option>Send Lead To</option>
+                <option>Change Profile Field</option>
+                <option>Set status as converted</option>
+                <option>Change profile field if no value exists</option>
+                <option>Update Sequence</option>
+                <option>Uncheck Profile Property Value</option>
+              </select>
+            </div>
           </div>
         </div>
         
@@ -55,7 +85,7 @@
     <div class="step">
       <mat-card>
         <mat-icon>reorder</mat-icon>
-        <mat-card-content>Subscriber joins the list for [dripname]</mat-card-content>
+        <mat-card-content>Subscriber joins the list for Drip</mat-card-content>
       </mat-card>
       <div>|</div>
       <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
@@ -87,15 +117,46 @@
           <mat-card-content>{{ step.settings.conditionName }}</mat-card-content>
         </mat-card>
         <div class="conditionContainer">
-          <div>
+          <div class="yesSide">
             <p class="yesSquare">Yes</p>
             <div>|</div>
-            <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
+            <button mat-mini-fab (click)="openNewYesBranch(step)"><mat-icon>add</mat-icon></button>
           </div>
-          <div>
+          <div class="noSide">
             <p class="noSquare">No</p>
             <div>|</div>
-            <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
+            <button mat-mini-fab (click)="openNewNoBranch(step)"><mat-icon>add</mat-icon></button>
+            <!-- Append conditional branches -->
+            <div *ngFor="let branchStep of step.branches">
+              <div *ngIf="branchStep.type == 'email'">
+                <mat-card (click)="openSettings(step)" class="emailCard">
+                  <mat-icon>mail_outline</mat-icon>
+                  <mat-card-content>{{ step.settings.emailName }}</mat-card-content>
+                </mat-card>
+                <div>|</div>
+                <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
+              </div>
+
+              <div *ngIf="branchStep.type == 'delay'">
+                <mat-card (click)="openSettings(step)" class="delayCard">
+                  <mat-icon>timer</mat-icon>
+                  <mat-card-content>Wait {{ step.settings.delay }} hours</mat-card-content>
+                </mat-card>
+                <div>|</div>
+                <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
+              </div>
+
+              <div *ngIf="branchStep.type == 'condition'">
+                <mat-card (click)="openSettings(step)" class="delayCard">
+                  <mat-icon>device_hub</mat-icon>
+                  <mat-card-content>{{ step.settings.conditionName }}</mat-card-content>
+                </mat-card>
+                <div>|</div>
+                <button mat-mini-fab (click)="openNewStepModal()"><mat-icon>add</mat-icon></button>
+              </div>
+              
+            </div>
+
           </div>
         </div>
       </div>
@@ -114,6 +175,44 @@
           <p>Email</p>
         </div>
         <div class="stepType" (click)="addConditionStep()">
+          <mat-icon>device_hub</mat-icon>
+          <p>Condition</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Yes Branch HTML -->
+    <div class="newStepModal yesBranchModal" *ngIf="createNewYesBranch">
+      <p>Add a step to your journey</p>
+      <div class="stepTypesContainer">
+        <div class="stepType" (click)="addDelayStepYesBranch()">
+          <mat-icon>timer</mat-icon>
+          <p>Delay</p>
+        </div>
+        <div class="stepType" (click)="addEmailStepYesBranch()">
+          <mat-icon>mail_outline</mat-icon>
+          <p>Email</p>
+        </div>
+        <div class="stepType" (click)="addConditionStepYesBranch()">
+          <mat-icon>device_hub</mat-icon>
+          <p>Condition</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Yes Branch HTML -->
+    <div class="newStepModal noBranchModal" *ngIf="createNewNoBranch">
+      <p>Add a step to your journey</p>
+      <div class="stepTypesContainer">
+        <div class="stepType" (click)="addDelayStepNoBranch()">
+          <mat-icon>timer</mat-icon>
+          <p>Delay</p>
+        </div>
+        <div class="stepType" (click)="addEmailStepNoBranch()">
+          <mat-icon>mail_outline</mat-icon>
+          <p>Email</p>
+        </div>
+        <div class="stepType" (click)="addConditionStepNoBranch()">
           <mat-icon>device_hub</mat-icon>
           <p>Condition</p>
         </div>

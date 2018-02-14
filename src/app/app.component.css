@@ -60,9 +60,19 @@ section {
   border: 2px dashed orange;
 }
 
+.yesSide {
+  position: relative;
+  right: 50px;
+}
+
 .yesSquare {
   border: 1px solid forestgreen;
   background-color: #bdefbd;
+}
+
+.noSide {
+  position: relative;
+  left: 50px;
 }
 
 .noSquare {
@@ -73,4 +83,14 @@ section {
 .conditionContainer {
   display: flex;
   justify-content: space-between;
+}
+
+.yesBranchModal {
+  position: relative;
+  right: 110px;
+}
+
+.noBranchModal {
+  position: relative;
+  left: 110px;
 }
